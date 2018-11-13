@@ -10,19 +10,24 @@ namespace ProjectBetterTeams
     {
         static void Main(string[] args)
         {
+            //TODO:
+            //Create class LogFileAccess
+            //Fix GoBack Method
+            //Complete UserManager.StudentEdit Method
+
 
             UserManager userManager = new UserManager();
-            UIWelcome Wellcome = new UIWelcome();
+            MainProcedure procedure = new MainProcedure();
+            UIProcedures UI = new UIProcedures();
             UserSignUp NewUser = new UserSignUp();
+
             do
             {
                 Console.Clear();
-                Wellcome.Wellcome();
-                bool DontExit = true;
+                UI.Wellcome();
+                bool Exit = true;
 
-                int input = Wellcome.StartMenu();
-
-                if (input == 2)
+                if (procedure.StartMenu().KeyChar == '2')
                 {
                     NewUser.SignUp();
                 }
@@ -32,7 +37,7 @@ namespace ProjectBetterTeams
                     do
                     {
                         Console.Clear();
-                        Wellcome.Wellcome();
+                        UI.Wellcome();
                         Console.Write("Username: ");
                         string Username = Console.ReadLine();
                         Console.Write("Password: ");
@@ -40,26 +45,19 @@ namespace ProjectBetterTeams
                         Users User;
                         char Choice;
 
-                        if (Wellcome.MainMenu(Username, Password, out Choice, out User))
+                        if (procedure.MainMenu(Username, Password, out Choice, out User))
                         {
-                            bool Stay;
                             do
-                            {
-                                Stay = false;
-                                Wellcome.MenuOptions(User, Choice, out Stay);
-                            } while (Stay);
+                            {                               
+                                procedure.MenuOptions(User, Choice, out Exit);
+                            } while (Exit);
                         }
-                        Console.WriteLine("Press 0 to Log Out!");
-                        string exit = Console.ReadLine();
-                        if (exit == "0")
-                            DontExit = false;
-                    } while (DontExit);
-
+                        Console.WriteLine("Press 0 to Exit!");
+                        ConsoleKeyInfo UserExit = Console.ReadKey(true);
+                        if (UserExit.KeyChar == '0')
+                            Exit = false;
+                    } while (Exit);
                 }
-
-
-
-                Console.ReadKey();
             } while (true);
         }
     }

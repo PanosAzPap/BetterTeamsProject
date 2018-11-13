@@ -27,14 +27,21 @@ namespace ProjectBetterTeams
             Posts post = new Posts()
             {
                 UsernameSender = Sender,
-                DateTime = DateTime.Now,
+                DateTime = DateTime.Now,                
                 Post = Post
             };
 
-            using (var db = new TeamsContext())
+            try
             {
-                db.Posts.Add(post);
-                db.SaveChanges();
+                using (var db = new TeamsContext())
+                {
+                    db.Posts.Add(post);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Post Is Empty!!!");
             }
         }
 
@@ -62,7 +69,7 @@ namespace ProjectBetterTeams
             using (var db = new TeamsContext())
             {
                 post = db.Posts.Find(ID);
-                db.Posts.Remove(post);
+                db.Entry(post).State = EntityState.Deleted;
                 db.SaveChanges();
             }
         }

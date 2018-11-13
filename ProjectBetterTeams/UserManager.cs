@@ -4,6 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.Threading;
+using System.Reflection;
+
+//Replace Delete section with Entity.State
+//Replace Edit section with Entity.State
 
 namespace ProjectBetterTeams
 {
@@ -116,8 +121,9 @@ namespace ProjectBetterTeams
                             using (var db = new TeamsContext())
                             {
                                 user.Username = NewUsername;
+                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                                 db.SaveChanges();
-                                Console.WriteLine("Modify Complete Successful!");
+                                Console.WriteLine("Modify Complete!");
                             }
                             break;
                         case 2:
@@ -128,8 +134,9 @@ namespace ProjectBetterTeams
                             using (var db = new TeamsContext())
                             {
                                 user.FirstName = NewFirstname;
+                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                                 db.SaveChanges();
-                                Console.WriteLine("Modify Complete Successful!");
+                                Console.WriteLine("Modify Complete!");
                             }
                             break;
                         case 3:
@@ -140,8 +147,9 @@ namespace ProjectBetterTeams
                             using (var db = new TeamsContext())
                             {
                                 user.LastName = NewLastname;
+                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                                 db.SaveChanges();
-                                Console.WriteLine("Modify Complete Successful!");
+                                Console.WriteLine("Modify Complete!");
                             }
                             break;
                         case 4:
@@ -165,8 +173,9 @@ namespace ProjectBetterTeams
                             using (var db = new TeamsContext())
                             {
                                 user.DateOFBirth = NewDateOfBirth;
+                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                                 db.SaveChanges();
-                                Console.WriteLine("Modify Complete Successful!");
+                                Console.WriteLine("Modify Complete!");
                             }
                             break;
                         case 5:
@@ -187,8 +196,9 @@ namespace ProjectBetterTeams
                             using (var db = new TeamsContext())
                             {
                                 user.UserType = NewUserType;
+                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                                 db.SaveChanges();
-                                Console.WriteLine("Modify Complete Successful!");
+                                Console.WriteLine("Modify Complete!");
                             }
                             break;
                         default:
@@ -199,6 +209,37 @@ namespace ProjectBetterTeams
 
                 }
             } while (Invalid);
+        }
+
+        public void StudentModifyUser(Users User)
+        {            
+            Console.WriteLine("What would you like tou edit?");
+            Console.WriteLine($"1. Username: {User.Username}\n2. Firstname: {User.FirstName}\n3. Lastname: {User.LastName}\n4. DateOfBirth: {User.DateOFBirth}");
+            ConsoleKeyInfo editChoice = Console.ReadKey(true);
+            switch (editChoice.KeyChar)
+            {
+                case '1':
+                    Console.Write("***NOTE***\nUser will log out after changes!!!\nNew Username:");
+                    string NewUserName = Console.ReadLine();
+                    if (FindUser(NewUserName) == null)
+                    {
+                        using (var db = new TeamsContext())
+                        {
+                            User.Username = Console.ReadLine();
+                            Console.WriteLine("Saving, please wait...");
+                            db.SaveChanges();
+                        }
+                        Console.WriteLine("Complete!\nLoging Out...");
+                        Thread.Sleep(3000);
+                        MainProcedure procedure = new MainProcedure();
+                        string fileName = Assembly.GetExecutingAssembly().Location;
+                        System.Diagnostics.Process.Start(fileName);
+                        Environment.Exit(0);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void TeacherModifyUser()
@@ -262,7 +303,7 @@ namespace ProjectBetterTeams
                             {
                                 user.FirstName = NewFirstname;
                                 db.SaveChanges();
-                                Console.WriteLine("Modify Complete Successful!");
+                                Console.WriteLine("Modify Complete!");
                             }
                             break;
                         case 3:
@@ -274,7 +315,7 @@ namespace ProjectBetterTeams
                             {
                                 user.LastName = NewLastname;
                                 db.SaveChanges();
-                                Console.WriteLine("Modify Complete Successful!");
+                                Console.WriteLine("Modify Complete!");
                             }
                             break;
                         case 4:
@@ -334,6 +375,7 @@ namespace ProjectBetterTeams
             using (var db = new TeamsContext())
             {
                 db.Users.Remove(user);
+                db.Entry(user).State = System.Data.Entity.EntityState.Deleted;
                 db.SaveChanges();
             }
             Console.WriteLine("Remove Complete Successful");

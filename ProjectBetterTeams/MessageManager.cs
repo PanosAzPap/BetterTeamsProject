@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
+
+
+
 
 namespace ProjectBetterTeams
 {
@@ -16,8 +20,8 @@ namespace ProjectBetterTeams
             string TextMessage = Console.ReadLine();
             string FirstPartText = "";
             string SecondPartText = "";
-            if (TextMessage == null)
-                TextMessage = "";
+            if (TextMessage == null || TextMessage == " ")
+                TextMessage = "Empty Message";
             if (TextMessage.Length <= 250)
             {
 
@@ -91,7 +95,7 @@ namespace ProjectBetterTeams
 
                 foreach (var mess in messages)
                 {
-                    Console.WriteLine($">>To: {mess.Receiver}, {mess.DateTime}:\n>>> {mess.Message}");
+                    Console.WriteLine($"--From: {mess.UsernameSender} To: {mess.Receiver}, {mess.DateTime}:\n>>> {mess.Message}");
                     Console.WriteLine("-----------------------------------------------------------------------------------");
                 }
             }
@@ -108,7 +112,7 @@ namespace ProjectBetterTeams
 
             foreach (var mess in messages)
             {
-                Console.WriteLine($">>To: {mess.Receiver}, {mess.DateTime}:\n>>> {mess.Message}");
+                Console.WriteLine($"--From: {mess.UsernameSender} To: {mess.Receiver}, {mess.DateTime}:\n>>> {mess.Message}");
                 Console.WriteLine("-----------------------------------------------------------------------------------");
             }
         }
@@ -141,7 +145,8 @@ namespace ProjectBetterTeams
             {
                 using (var db = new TeamsContext())
                 {
-                    db.Messages.Remove(message);
+                    db.Entry(message).State = EntityState.Deleted;
+
                     db.SaveChanges();
                 }
                 Console.WriteLine("Removal Complete!");
