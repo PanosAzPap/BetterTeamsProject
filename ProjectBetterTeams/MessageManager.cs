@@ -71,12 +71,7 @@ namespace ProjectBetterTeams
                     db.Messages.Add(message);
                     db.SaveChanges();
                 }
-                Console.WriteLine("Μessage sent successfully!");
-            }
-
-            using (var db = new TeamsContext())
-            {
-                db.Messages.Add(message);
+                Console.WriteLine("Μessage sent!");
             }
         }
 
@@ -145,6 +140,7 @@ namespace ProjectBetterTeams
             {
                 using (var db = new TeamsContext())
                 {
+
                     db.Entry(message).State = EntityState.Deleted;
 
                     db.SaveChanges();
@@ -155,6 +151,16 @@ namespace ProjectBetterTeams
             {
                 Console.WriteLine("Message Not Found");
             }
+        }
+
+        public List<Messages> DeleteUserMessages(string Username)
+        {
+            List<Messages> messages;
+            using (var db = new TeamsContext())
+            {
+                messages = db.Messages.Where(m => m.UsernameSender == Username || m.Receiver == Username).Select(m => m).ToList();
+            }
+            return messages;
         }
 
     }

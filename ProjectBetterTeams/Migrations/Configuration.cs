@@ -21,7 +21,7 @@ namespace ProjectBetterTeams.Migrations
                 Password = pass.EncryptPassword("Admin"),
                 FirstName = "Panagiotis",
                 LastName = "Papadopoulos",
-                DateOFBirth = new DateTime(1992 / 02 / 28),
+                DateOFBirth = DateTime.Parse("1992/02/28").Date,
                 UserType = "SuperAdmin"
             };
             using (var db = new TeamsContext())

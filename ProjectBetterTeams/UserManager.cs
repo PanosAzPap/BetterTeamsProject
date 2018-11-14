@@ -7,14 +7,10 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Reflection;
 
-//Replace Delete section with Entity.State
-//Replace Edit section with Entity.State
-
 namespace ProjectBetterTeams
 {
     class UserManager
     {
-
         //Find User
         public Users FindUser(string Username)
         {
@@ -34,7 +30,7 @@ namespace ProjectBetterTeams
             NewUser.Password = user.password;
             NewUser.FirstName = user.firstname;
             NewUser.LastName = user.lastname;
-            NewUser.DateOFBirth = user.dateofbirth;
+            NewUser.DateOFBirth = user.dateofbirth.Date;
             NewUser.UserType = user.usertype;
 
             using (var db = new TeamsContext())
@@ -46,6 +42,7 @@ namespace ProjectBetterTeams
             Console.WriteLine($"{NewUser.FirstName} wellcome to BetterTeams!");
         }
 
+        //Get List Of Users(except self)
         public List<string> GetUsernames(string Username)
         {
             List<string> Usernames = new List<string>();
@@ -72,11 +69,14 @@ namespace ProjectBetterTeams
             }
         }
 
-        //User Modification
-        public void ModifyUser()
+        //SuperAdmin Modification Access
+        public void ModifyUser(Users CurrentUser)
         {
             bool Invalid;
-            GetAllUsers();
+            foreach (string name in GetUsernames(CurrentUser.Username))
+            {
+                Console.WriteLine($"--> {name}");
+            }
             do
             {
                 Invalid = false;
@@ -90,24 +90,15 @@ namespace ProjectBetterTeams
                 }
                 else
                 {
-                    Int16 Choice = 0;
                     Users user = FindUser(Username);
                     Console.WriteLine("Select what you would like to edit:");
-                    Console.WriteLine($"1. Username: {user.Username}\n2. Firstname: {user.FirstName}\n3. Lastname: {user.LastName}\n4. DateOfBirth: {user.DateOFBirth}\n5. UserType: {user.UserType}");
+                    Console.WriteLine("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+                    Console.WriteLine($"1. Username: {user.Username}\n2. Firstname: {user.FirstName}\n3. Lastname: {user.LastName}\n4. DateOfBirth: {user.DateOFBirth}\n5. UserType: {user.UserType}\n6. Delete User\n0. Exit");
 
-                    try
-                    {
-                        Choice = Int16.Parse(Console.ReadLine());
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("Invalid Input!");
-                        Invalid = true;
-                    }
-
+                    char Choice = Console.ReadKey(true).KeyChar;
                     switch (Choice)
                     {
-                        case 1:
+                        case '1':
                             string NewUsername;
                             do
                             {
@@ -126,7 +117,7 @@ namespace ProjectBetterTeams
                                 Console.WriteLine("Modify Complete!");
                             }
                             break;
-                        case 2:
+                        case '2':
                             //FirstName
                             Console.Write("New FirstName: ");
                             string NewFirstname = Console.ReadLine();
@@ -139,7 +130,7 @@ namespace ProjectBetterTeams
                                 Console.WriteLine("Modify Complete!");
                             }
                             break;
-                        case 3:
+                        case '3':
                             //LastName
                             Console.Write("New LastName: ");
                             string NewLastname = Console.ReadLine();
@@ -152,7 +143,7 @@ namespace ProjectBetterTeams
                                 Console.WriteLine("Modify Complete!");
                             }
                             break;
-                        case 4:
+                        case '4':
                             //Date Of Birth
                             DateTime NewDateOfBirth = new DateTime();
                             do
@@ -178,28 +169,48 @@ namespace ProjectBetterTeams
                                 Console.WriteLine("Modify Complete!");
                             }
                             break;
-                        case 5:
+                        case '5':
                             //User Type
-                            string NewUserType;
+                            char NewUserType;
                             do
                             {
+                                Console.Clear();
                                 Invalid = false;
-                                Console.WriteLine("Choose New User Type:\nStudent\nTeacher\nAdmin");
-                                NewUserType = Console.ReadLine();
-                                if (NewUserType != "Student" || NewUserType != "Teacher" || NewUserType != "Admin")
+                                Console.WriteLine("Choose New User Type:\n1. Student\n2. Teacher\n3. Admin");
+                                NewUserType = Console.ReadKey(true).KeyChar;
+                                switch (NewUserType)
                                 {
-                                    Console.WriteLine("Wrong User Type!");
-                                    Invalid = true;
+                                    case '1':
+                                        user.UserType = "Student";
+                                        break;
+                                    case '2':
+                                        user.UserType = "Teacher";
+                                        break;
+                                    case '3':
+                                        user.UserType = "Admin";
+                                        break;
+                                    default:
+                                        Console.WriteLine("Wrong User Type!");
+                                        Invalid = true;
+                                        break;
                                 }
                             } while (Invalid);
 
                             using (var db = new TeamsContext())
                             {
-                                user.UserType = NewUserType;
                                 db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                                 db.SaveChanges();
                                 Console.WriteLine("Modify Complete!");
                             }
+                            break;
+                        case '6':
+                            Console.WriteLine("Are you sure (y/n)?");
+                            char IsSure = Console.ReadKey(true).KeyChar;
+                            if (IsSure == 'y')
+                                DeleteUser(user);
+                            break;
+                        case '0':
+                            Invalid = false;
                             break;
                         default:
                             Console.WriteLine("Invalid Input!");
@@ -211,41 +222,14 @@ namespace ProjectBetterTeams
             } while (Invalid);
         }
 
-        public void StudentModifyUser(Users User)
-        {            
-            Console.WriteLine("What would you like tou edit?");
-            Console.WriteLine($"1. Username: {User.Username}\n2. Firstname: {User.FirstName}\n3. Lastname: {User.LastName}\n4. DateOfBirth: {User.DateOFBirth}");
-            ConsoleKeyInfo editChoice = Console.ReadKey(true);
-            switch (editChoice.KeyChar)
-            {
-                case '1':
-                    Console.Write("***NOTE***\nUser will log out after changes!!!\nNew Username:");
-                    string NewUserName = Console.ReadLine();
-                    if (FindUser(NewUserName) == null)
-                    {
-                        using (var db = new TeamsContext())
-                        {
-                            User.Username = Console.ReadLine();
-                            Console.WriteLine("Saving, please wait...");
-                            db.SaveChanges();
-                        }
-                        Console.WriteLine("Complete!\nLoging Out...");
-                        Thread.Sleep(3000);
-                        MainProcedure procedure = new MainProcedure();
-                        string fileName = Assembly.GetExecutingAssembly().Location;
-                        System.Diagnostics.Process.Start(fileName);
-                        Environment.Exit(0);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void TeacherModifyUser()
+        //Admin Modifications Access
+        public void AdminModifyUser(Users CurrentUser)
         {
             bool Invalid;
-            GetAllUsers();
+            foreach (string name in GetUsernames(CurrentUser.Username))
+            {
+                Console.WriteLine($"--> {name}");
+            }
             do
             {
                 Invalid = false;
@@ -259,24 +243,15 @@ namespace ProjectBetterTeams
                 }
                 else
                 {
-                    Int16 Choice = 0;
                     Users user = FindUser(Username);
                     Console.WriteLine("Select what you would like to edit:");
-                    Console.WriteLine($"1. Username: {user.Username}\n2. Firstname: {user.FirstName}\n3. Lastname: {user.LastName}\n4. DateOfBirth: {user.DateOFBirth} ");
+                    Console.WriteLine("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+                    Console.WriteLine($"1. Username: {user.Username}\n2. Firstname: {user.FirstName}\n3. Lastname: {user.LastName}\n4. DateOfBirth: {user.DateOFBirth}\n5. UserType: {user.UserType}\n6. Delete User\n0. Exit");
 
-                    try
-                    {
-                        Choice = Int16.Parse(Console.ReadLine());
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("Invalid Input!");
-                        Invalid = true;
-                    }
-
+                    char Choice = Console.ReadKey(true).KeyChar;
                     switch (Choice)
                     {
-                        case 1:
+                        case '1':
                             string NewUsername;
                             do
                             {
@@ -290,11 +265,208 @@ namespace ProjectBetterTeams
                             using (var db = new TeamsContext())
                             {
                                 user.Username = NewUsername;
+                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                                 db.SaveChanges();
-                                Console.WriteLine("Modify Complete Successful!");
+                                Console.WriteLine("Modify Complete!");
                             }
                             break;
-                        case 2:
+                        case '2':
+                            //FirstName
+                            Console.Write("New FirstName: ");
+                            string NewFirstname = Console.ReadLine();
+
+                            using (var db = new TeamsContext())
+                            {
+                                user.FirstName = NewFirstname;
+                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                                db.SaveChanges();
+                                Console.WriteLine("Modify Complete!");
+                            }
+                            break;
+                        case '3':
+                            //LastName
+                            Console.Write("New LastName: ");
+                            string NewLastname = Console.ReadLine();
+
+                            using (var db = new TeamsContext())
+                            {
+                                user.LastName = NewLastname;
+                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                                db.SaveChanges();
+                                Console.WriteLine("Modify Complete!");
+                            }
+                            break;
+                        case '4':
+                            //Date Of Birth
+                            DateTime NewDateOfBirth = new DateTime();
+                            do
+                            {
+                                Invalid = false;
+                                Console.Write("New Date Of Birth(yyyy/mm/dd): ");
+                                try
+                                {
+                                    NewDateOfBirth = DateTime.Parse(Console.ReadLine());
+                                }
+                                catch (Exception)
+                                {
+                                    Console.WriteLine("Invalid Format!");
+                                    Invalid = true;
+                                }
+                            } while (Invalid);
+
+                            using (var db = new TeamsContext())
+                            {
+                                user.DateOFBirth = NewDateOfBirth;
+                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                                db.SaveChanges();
+                                Console.WriteLine("Modify Complete!");
+                            }
+                            break;
+                        case '0':
+                            Invalid = false;
+                            break;
+                        default:
+                            Console.WriteLine("Invalid Input!");
+                            Invalid = true;
+                            break;
+                    }
+
+                }
+            } while (Invalid);
+        }
+
+        //Student Modifications Access
+        public void StudentModifyUser(Users User)
+        {
+            char TryAgain = '0';
+            Console.WriteLine("What would you like tou edit?");
+            Console.WriteLine($"1. Username: {User.Username}\n2. Password \n3. Firstname: {User.FirstName}\n4. Lastname: {User.LastName}\n5. DateOfBirth: {User.DateOFBirth}");
+            ConsoleKeyInfo editChoice = Console.ReadKey(true);
+            switch (editChoice.KeyChar)
+            {
+                case '1':
+                    Console.Write("***NOTE***\nApplication will Restart after changes!!!\nNew Username:");
+                    string NewUserName = Console.ReadLine();
+                    if (FindUser(NewUserName) == null)
+                    {
+                        using (var db = new TeamsContext())
+                        {
+                            User.Username = Console.ReadLine();
+                            db.Entry(User).State = System.Data.Entity.EntityState.Modified;
+                            Console.WriteLine("Saving, please wait...");
+                            db.SaveChanges();
+                        }
+                        Console.WriteLine("Complete!\nLoging Out...");
+                        Thread.Sleep(3000);
+                        string fileName = Assembly.GetExecutingAssembly().Location;
+                        System.Diagnostics.Process.Start(fileName);
+                        Environment.Exit(0);
+                    }
+                    break;
+                case '2':
+                    Console.Write("***NOTE***\nApplication will Restart after changes!!!\nNew Username:");                    
+                    UserSignUp EncryptPass = new UserSignUp();
+                    do
+                    {
+                        Console.Write("Current Password: ");
+                        string CurrentPassword = EncryptPass.EncryptPassword(Console.ReadLine());
+                        if (CurrentPassword == User.Password)
+                        {
+                            using (var db = new TeamsContext())
+                            {
+                                Console.Write("New Password: ");
+                                User.Password = EncryptPass.EncryptPassword(Console.ReadLine());
+                                db.Entry(User).State = System.Data.Entity.EntityState.Modified;
+                                Console.WriteLine("Saving, please wait...");
+                                db.SaveChanges();
+                            }
+                            Console.WriteLine("Complete!\nLoging Out...");
+                            Thread.Sleep(3000);
+                            string fileName = Assembly.GetExecutingAssembly().Location;
+                            System.Diagnostics.Process.Start(fileName);
+                            Environment.Exit(0);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Password");
+                            Console.WriteLine("Press 1 to Try Again");
+                            TryAgain = Console.ReadKey(true).KeyChar;
+                        }
+                    } while (TryAgain == '1');
+                    break;
+                case '3':
+                    Console.Write("New FirstName: ");
+                    string NewFirstname = Console.ReadLine();
+                    using (var db = new TeamsContext())
+                    {
+                        User.FirstName = NewFirstname;
+                        db.Entry(User).State = System.Data.Entity.EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                    break;
+                case '4':
+                    Console.Write("New LastName: ");
+                    string NewLastname = Console.ReadLine();
+                    using (var db = new TeamsContext())
+                    {
+                        User.LastName = NewLastname;
+                        db.Entry(User).State = System.Data.Entity.EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                    break;
+                case '5':
+                    do
+                    {
+                        Console.Write("New Date Of Birth(yyyy/mm/dd: ");
+                        try
+                        {
+                            DateTime NewDateofbirth = DateTime.Parse(Console.ReadLine());
+                            using (var db = new TeamsContext())
+                            {
+                                User.DateOFBirth = NewDateofbirth;
+                                db.Entry(User).State = System.Data.Entity.EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Wrong Input!\nPress 1 to Try Again");
+                            TryAgain = Console.ReadKey(true).KeyChar;
+                        }
+                    } while (TryAgain == '1');
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //Teacher Modification Access
+        public void TeacherModifyUser(Users CurrentUser)
+        {
+            bool Invalid;
+            GetUsernames(CurrentUser.Username);
+            do
+            {
+                Invalid = false;
+                Console.Write("Insert Username: ");
+                string Username = Console.ReadLine();
+
+                if (FindUser(Username) == null)
+                {
+                    Console.WriteLine("Username Not Found!");
+                    Invalid = true;
+                }
+                else
+                {
+                    char Choice;
+                    Users user = FindUser(Username);
+                    Console.WriteLine("Select what you would like to edit:");
+                    Console.WriteLine("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+                    Console.WriteLine($"Username: {user.Username}\n1. Firstname: {user.FirstName}\n2. Lastname: {user.LastName}\n3. DateOfBirth: {user.DateOFBirth} ");
+                    Choice = Console.ReadKey(true).KeyChar;
+                    switch (Choice)
+                    {
+                        case '1':
                             //FirstName
                             Console.Write("New FirstName: ");
                             string NewFirstname = Console.ReadLine();
@@ -306,7 +478,7 @@ namespace ProjectBetterTeams
                                 Console.WriteLine("Modify Complete!");
                             }
                             break;
-                        case 3:
+                        case '2':
                             //LastName
                             Console.Write("New LastName: ");
                             string NewLastname = Console.ReadLine();
@@ -318,7 +490,7 @@ namespace ProjectBetterTeams
                                 Console.WriteLine("Modify Complete!");
                             }
                             break;
-                        case 4:
+                        case '3':
                             //Date Of Birth
                             DateTime NewDateOfBirth = new DateTime();
                             do
@@ -354,31 +526,22 @@ namespace ProjectBetterTeams
         }
 
         //Delete User
-        public void DeleteUser()
+        public void DeleteUser(Users user)
         {
-            Users user;
-            bool Invalid;
-            GetAllUsers();
-            do
-            {
-                Invalid = false;
-                Console.Write("Choose User(Username): ");
-                string Username = Console.ReadLine();
-                user = FindUser(Username);
-                if (user == null)
-                {
-                    Console.WriteLine("User Not Found!");
-                    Invalid = true;
-                }
-            } while (Invalid);
-
+            MessageManager messages = new MessageManager();
             using (var db = new TeamsContext())
             {
-                db.Users.Remove(user);
-                db.Entry(user).State = System.Data.Entity.EntityState.Deleted;
+                Console.WriteLine("Please wait...\nRemoving Users data...");
+                foreach (var item in messages.DeleteUserMessages(user.Username))
+                {
+                    db.Entry(item).State = System.Data.Entity.EntityState.Deleted;
+                    db.SaveChanges();
+                }
+                Console.WriteLine("Finishing...");
+                db.Entry(user).State = System.Data.Entity.EntityState.Deleted;              
                 db.SaveChanges();
             }
-            Console.WriteLine("Remove Complete Successful");
+            Console.WriteLine("Remove Complete!");
         }
 
         //Valid User

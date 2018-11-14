@@ -10,10 +10,10 @@ namespace ProjectBetterTeams
     {
         static void Main(string[] args)
         {
-            //TODO:
-            //Create class LogFileAccess
-            //Fix GoBack Method
-            //Complete UserManager.StudentEdit Method
+            // TODO:
+            // 1. Create class LogFileAccess
+            // 2. Fix GoBack Method
+            // 3. Fix Admin Modification Access in MainProcedure
 
 
             UserManager userManager = new UserManager();

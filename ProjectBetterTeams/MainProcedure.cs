@@ -111,7 +111,7 @@ namespace ProjectBetterTeams
                 switch (input)
                 {
                     case "1":
-                        userManager.ModifyUser();
+                        userManager.ModifyUser(User);
                         break;
                     case "2":
                         Console.WriteLine("Select Message to Delete");
@@ -129,19 +129,22 @@ namespace ProjectBetterTeams
             else if (User.UserType == "Teacher")
             {
                 Console.WriteLine("Edit:\n1. Users\n2. Go back");
-                string input = Console.ReadLine();
+                char input = Console.ReadKey(true).KeyChar;
 
                 switch (input)
                 {
-                    case "1":
-                        userManager.ModifyUser();
+                    case '1':
+                        userManager.TeacherModifyUser(User);
                         break;
-                    case "2":
+                    case '2':
                         return;
                     default:
                         Console.WriteLine("Invalid Input!");
                         break;
                 }
+            }else if (User.UserType == "Admin")
+            {
+                userManager.AdminModifyUser(User);
             }
             else
             {
