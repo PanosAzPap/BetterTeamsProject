@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogFileAccess.cs" />
     <Compile Include="Migrations\201811082108481_Init.cs" />
     <Compile Include="Migrations\201811082108481_Init.Designer.cs">
       <DependentUpon>201811082108481_Init.cs</DependentUpon>

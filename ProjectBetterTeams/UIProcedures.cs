@@ -42,7 +42,7 @@ namespace ProjectBetterTeams
             Console.WriteLine("\n");
             Console.WriteLine($"Wellcome, {User.FirstName}!");
             Console.WriteLine("\n");
-            Console.WriteLine("1. Chat     2. Rooms     3. View Profile    4. Edit User");
+            Console.WriteLine("1. Chat     2. Rooms     3. View Profile    4. Edit User    0. Log Out");
         }
 
         public void UIRedirectSignUp()
@@ -50,9 +50,9 @@ namespace ProjectBetterTeams
             Console.WriteLine("Invalid Username or Password");
             Console.WriteLine("1. Create Account  |  2. Try Again");
 
-            ConsoleKeyInfo input = Console.ReadKey();
+            char input = Console.ReadKey(true).KeyChar;
 
-            if (input.KeyChar == '1')
+            if (input == '1')
                 NewUser.SignUp();
         }
 

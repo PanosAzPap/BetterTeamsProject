@@ -11,52 +11,51 @@ namespace ProjectBetterTeams
         static void Main(string[] args)
         {
             // TODO:
-            // 1. Create class LogFileAccess
-            // 2. Fix GoBack Method
-            // 3. Fix Admin Modification Access in MainProcedure
+            // 2. Fix Admin Modification Access in MainProcedure
 
-
+            //Usefull Classes
+            #region
             UserManager userManager = new UserManager();
             MainProcedure procedure = new MainProcedure();
             UIProcedures UI = new UIProcedures();
             UserSignUp NewUser = new UserSignUp();
+            #endregion
+
+            Console.Clear();
+            UI.Wellcome();
+            bool LogOut = false;
+
 
             do
             {
-                Console.Clear();
-                UI.Wellcome();
-                bool Exit = true;
-
                 if (procedure.StartMenu().KeyChar == '2')
                 {
                     NewUser.SignUp();
                 }
                 else
                 {
+                    Console.Clear();
+                    UI.Wellcome();
+                    Console.Write("Username: ");
+                    string Username = Console.ReadLine();
+                    Console.Write("Password: ");
+                    string Password = Console.ReadLine();
+                    Users User;
+                    char Choice;
 
                     do
                     {
-                        Console.Clear();
-                        UI.Wellcome();
-                        Console.Write("Username: ");
-                        string Username = Console.ReadLine();
-                        Console.Write("Password: ");
-                        string Password = Console.ReadLine();
-                        Users User;
-                        char Choice;
-
-                        if (procedure.MainMenu(Username, Password, out Choice, out User))
+                        LogOut = true;
+                        if (procedure.MainMenu(Username, Password, out User))
                         {
-                            do
-                            {                               
-                                procedure.MenuOptions(User, Choice, out Exit);
-                            } while (Exit);
+                            Choice = Console.ReadKey(true).KeyChar;
+                            procedure.MenuOptions(User, Choice);
                         }
-                        Console.WriteLine("Press 0 to Exit!");
-                        ConsoleKeyInfo UserExit = Console.ReadKey(true);
-                        if (UserExit.KeyChar == '0')
-                            Exit = false;
-                    } while (Exit);
+                        Console.WriteLine("Are you Sure?(y/n)");
+                        char TrueLogOut = Console.ReadKey(true).KeyChar;
+                        if (TrueLogOut == 'y')
+                            LogOut = false;
+                    } while (LogOut);
                 }
             } while (true);
         }

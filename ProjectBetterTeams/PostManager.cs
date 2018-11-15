@@ -74,6 +74,23 @@ namespace ProjectBetterTeams
             }
         }
 
+        public void DeleteUserPosts(string Username)
+        {
+            List<Posts> Posts;
+            using (var db = new TeamsContext())
+            {
+                Console.WriteLine("Deleting Posts...");
+                Posts = db.Posts.Where(p => p.UsernameSender == Username).Select(p => p).ToList();
+
+                foreach (var item in Posts)
+                {
+                    db.Entry(item).State = EntityState.Deleted;
+                    db.SaveChanges();
+                }
+            }
+        }
+
+
         public Posts FindPost(int ID)
         {
             Posts post;

@@ -529,14 +529,13 @@ namespace ProjectBetterTeams
         public void DeleteUser(Users user)
         {
             MessageManager messages = new MessageManager();
+            PostManager posts = new PostManager();
+
+            Console.WriteLine("Please wait...\nRemoving Users data...");
+            posts.DeleteUserPosts(user.Username);
+            messages.DeleteUserMessages(user.Username);
             using (var db = new TeamsContext())
             {
-                Console.WriteLine("Please wait...\nRemoving Users data...");
-                foreach (var item in messages.DeleteUserMessages(user.Username))
-                {
-                    db.Entry(item).State = System.Data.Entity.EntityState.Deleted;
-                    db.SaveChanges();
-                }
                 Console.WriteLine("Finishing...");
                 db.Entry(user).State = System.Data.Entity.EntityState.Deleted;              
                 db.SaveChanges();

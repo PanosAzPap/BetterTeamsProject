@@ -14,6 +14,7 @@ namespace ProjectBetterTeams
         UserManager userManager = new UserManager();
         PostManager postManager = new PostManager();
         MessageManager messageManager = new MessageManager();
+        LogFileAccess Log = new LogFileAccess();
 
         //Start Menu
         public ConsoleKeyInfo StartMenu()
@@ -33,7 +34,7 @@ namespace ProjectBetterTeams
         }
 
 
-        public bool MainMenu(string Username, string Password, out char Choice, out Users User)
+        public bool MainMenu(string Username, string Password, out Users User)
         {
 
             UserManager userManager = new UserManager();
@@ -43,13 +44,12 @@ namespace ProjectBetterTeams
 
                 if (userManager.ConfirmUser(Username, Password))
                 {
+
                     User = userManager.FindUser(Username);
+                    Log.LogUser(User.Username);
                     Console.Clear();
 
-                    UI.UIMainMenu(User);
-
-                    ConsoleKeyInfo choice = Console.ReadKey(true);
-                    Choice = choice.KeyChar;
+                    UI.UIMainMenu(User);                   
 
                     return true;
                 }
@@ -67,7 +67,7 @@ namespace ProjectBetterTeams
 
 
 
-        public void MenuOptions(Users User, char Choice, out bool Stay)
+        public void MenuOptions(Users User, char Choice)
         {
             do
             {
@@ -75,86 +75,89 @@ namespace ProjectBetterTeams
                 {
                     case '1':
                         ChatMenu(User);
-                        Stay = true;
                         break;
                     case '2':
                         PostMenu(User);
-                        Stay = true;
                         break;
                     case '3':
                         UI.ViewProfile(User.Username);
-                        Stay = false;
                         break;
                     case '4':
                         EditMenu(User);
-                        Stay = true;
                         break;
-                    case '0':
-                        Stay = false;
-                        break;
+                    case '0':                        
+                        return;
                     default:
                         Console.WriteLine("");
-                        Stay = true;
-                        break;
+                        break;                        
                 }
-            } while (Stay);
+
+                UI.UIMainMenu(User);
+                Choice = Console.ReadKey(true).KeyChar;                
+            } while (true);
         }
 
         public void EditMenu(Users User)
         {
-            if (User.UserType == "SuperAdmin")
+            do
             {
-                string input;
-                Console.WriteLine("What do you want to edit?\n1. Users | 2. Messages | 3. Posts");
-                input = Console.ReadLine();
-
-                switch (input)
+                if (User.UserType == "SuperAdmin")
                 {
-                    case "1":
-                        userManager.ModifyUser(User);
-                        break;
-                    case "2":
-                        Console.WriteLine("Select Message to Delete");
-                        messageManager.DeleteMessage();
-                        break;
-                    case "3":
-                        Console.WriteLine("Select Post to Delete:");
-                        postManager.DeletePost();
-                        break;
-                    default:
-                        Console.WriteLine("Invalid Input!");
-                        break;
-                }
-            }
-            else if (User.UserType == "Teacher")
-            {
-                Console.WriteLine("Edit:\n1. Users\n2. Go back");
-                char input = Console.ReadKey(true).KeyChar;
+                    char input;
+                    Console.WriteLine("What do you want to edit?\n1. Users | 2. Messages | 3. Posts | 0. Back");
+                    input = Console.ReadKey(true).KeyChar;
 
-                switch (input)
+                    switch (input)
+                    {
+                        case '1':
+                            userManager.ModifyUser(User);
+                            break;
+                        case '2':
+                            Console.WriteLine("Select Message to Delete");
+                            messageManager.DeleteMessage();
+                            break;
+                        case '3':
+                            Console.WriteLine("Select Post to Delete:");
+                            postManager.DeletePost();
+                            break;
+                        case '0':
+                            return;                            
+                        default:
+                            Console.WriteLine("Invalid Input!");
+                            break;
+                    }
+                }
+                else if (User.UserType == "Teacher")
                 {
-                    case '1':
-                        userManager.TeacherModifyUser(User);
-                        break;
-                    case '2':
-                        return;
-                    default:
-                        Console.WriteLine("Invalid Input!");
-                        break;
-                }
-            }else if (User.UserType == "Admin")
-            {
-                userManager.AdminModifyUser(User);
-            }
-            else
-            {
-                userManager.StudentModifyUser(User);
-            }
+                    Console.WriteLine("Edit:\n1. Users\n2. Go back");
+                    char input = Console.ReadKey(true).KeyChar;
 
+                    switch (input)
+                    {
+                        case '1':
+                            userManager.TeacherModifyUser(User);
+                            break;
+                        case '2':
+                            return;
+                        default:
+                            Console.WriteLine("Invalid Input!");
+                            break;
+                    }
+                }
+                else if (User.UserType == "Admin")
+                {
+                    userManager.AdminModifyUser(User);
+                }
+                else
+                {
+                    userManager.StudentModifyUser(User);
+                }
+            } while (true);
         }
 
         public void ChatBox(Users user)
         {
+            Console.Clear();
             bool Exit = true;
             string User = UI.ShowUsernames(user);
             while (Exit)
@@ -165,16 +168,17 @@ namespace ProjectBetterTeams
 
                 if (Console.KeyAvailable)
                 {
-                    ConsoleKeyInfo key = Console.ReadKey(true);
 
-                    switch (key.KeyChar)
+                    char key = Console.ReadKey(true).KeyChar;
+                    switch (key)
                     {
                         case '1':
                             Console.Write("-->");
                             messageManager.SendMessage(user.Username, User);
                             break;
                         case '2':
-                            Exit = false;
+                            Console.WriteLine("Exiting...");
+                            Exit = false;                           
                             break;
                         default:
 
@@ -192,15 +196,13 @@ namespace ProjectBetterTeams
             switch (choice.KeyChar)
             {
                 case '1':
-                    ChatBox(User);
-                    Console.ReadKey();
+                    ChatBox(User);                    
                     break;
                 case '2':
                     messageManager.DeleteMessage();
                     break;
                 case '3':
-                    UI.UIMainMenu(User);
-                    break;
+                    return;
                 default:
                     break;
             }
@@ -236,11 +238,9 @@ namespace ProjectBetterTeams
                             Stay = true;
                             break;
                         case '5':
-                            char escape = key.KeyChar;
                             Stay = false;
                             break;
                         default:
-
                             break;
                     }
                 }

@@ -125,17 +125,21 @@ namespace ProjectBetterTeams
         public void DeleteMessage()
         {
             int ID;
+            Messages message = null;
             GetMessages();
-            Console.Write("Select Message ID to Delete:");
+            Console.Write("Select Message ID to Delete Or 0 to Go Back:");
+
             try
             {
                 ID = int.Parse(Console.ReadLine());
+                message = FindMessage(ID);
             }
             catch
             {
                 ID = 0;
             }
-            Messages message = FindMessage(ID);
+            if (ID == 0)
+                return;
             if (message != null)
             {
                 using (var db = new TeamsContext())
@@ -153,14 +157,20 @@ namespace ProjectBetterTeams
             }
         }
 
-        public List<Messages> DeleteUserMessages(string Username)
+        public void DeleteUserMessages(string Username)
         {
             List<Messages> messages;
             using (var db = new TeamsContext())
             {
+                Console.WriteLine("Deleting messages...");
                 messages = db.Messages.Where(m => m.UsernameSender == Username || m.Receiver == Username).Select(m => m).ToList();
+
+                foreach(var message in messages)
+                {
+                    db.Entry(message).State = EntityState.Deleted;
+                    db.SaveChanges();
+                }
             }
-            return messages;
         }
 
     }
