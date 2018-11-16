@@ -8,6 +8,9 @@ namespace ProjectBetterTeams
 
     public partial class Posts
     {
+
+        #region Posts Table Fields
+
         [Key]
         [Column(Order = 0)]
         public int PostID { get; set; }
@@ -24,5 +27,6 @@ namespace ProjectBetterTeams
         public string Post { get; set; }
 
         public virtual Users Users { get; set; }
+        #endregion 
     }
 }

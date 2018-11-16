@@ -8,6 +8,8 @@ namespace ProjectBetterTeams
 
     public partial class Messages
     {
+        
+        #region Messages Table Fields
         [Key]
         [Column(Order = 0)]
         public int MessageID { get; set; }
@@ -28,5 +30,6 @@ namespace ProjectBetterTeams
         public DateTime DateTime { get; set; }
 
         public virtual Users Users { get; set; }
+        #endregion 
     }
 }

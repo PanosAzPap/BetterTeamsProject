@@ -8,6 +8,8 @@ namespace ProjectBetterTeams
 
     public partial class Users
     {
+
+        #region Users Table Fields
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Users()
         {
@@ -43,5 +45,6 @@ namespace ProjectBetterTeams
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Posts> Posts { get; set; }
+        #endregion
     }
 }

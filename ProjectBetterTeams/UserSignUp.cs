@@ -20,23 +20,32 @@ namespace ProjectBetterTeams
             Console.Clear();
             User = new UserDTO();
 
+            string firstname;
+            string lastname;
             do
             {
                 Invalid = false;
                 Console.Write("First Name: ");
-                User.firstname = DoUpper(Console.ReadLine());
-                if (User.firstname == "Invalid")
+                firstname = Console.ReadLine();                
+                if (firstname == "")
+                {
+                    Console.WriteLine("First Name cant be empty!");
                     Invalid = true;
+                }                
             } while (Invalid);
-
+            User.firstname = DoUpper(firstname);
             do
             {
                 Invalid = false;
                 Console.Write("Last Name: ");
-                User.lastname = DoUpper(Console.ReadLine());
-                if (User.lastname == "Invalid")
+                lastname = Console.ReadLine();            
+                if (lastname == "")
+                {
+                    Console.WriteLine("Last Name cant be empty!");
                     Invalid = true;
+                }
             } while (Invalid);
+            User.lastname = DoUpper(lastname);
 
             do
             {
@@ -60,6 +69,12 @@ namespace ProjectBetterTeams
                 InvalidUserName = false;
                 Console.Write("Username: ");
                 User.username = Console.ReadLine();
+                if (User.username == "")
+                {
+                    Console.WriteLine("Username cant be empty!");
+                    InvalidUserName = true;
+                    continue;
+                }
                 try
                 {
                     if (User.username == userManager.FindUser(User.username).Username)
@@ -74,8 +89,20 @@ namespace ProjectBetterTeams
                 }
             } while (InvalidUserName);
 
-            Console.Write("Password: ");
-            string Password = Console.ReadLine();
+            //Check Valid Password
+            bool InvalidPassword = false;
+            string Password;
+            do
+            {
+                InvalidPassword = false;
+                Console.Write("Password: ");
+                Password = Console.ReadLine();
+                if (Password == "")
+                {
+                    InvalidPassword = true;
+                    Console.WriteLine("Password cant be empty");
+                }
+            } while (InvalidPassword);
             User.password = EncryptPassword(Password);
 
             //Send to Database

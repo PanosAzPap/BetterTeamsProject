@@ -13,14 +13,17 @@ namespace ProjectBetterTeams
         UserManager userManager = new UserManager();
         UserSignUp NewUser = new UserSignUp();
 
+
         public UIProcedures()
         {
-            Console.BackgroundColor = ConsoleColor.Blue;            
-            Console.SetWindowSize(106, 30);            
-            Console.CursorVisible = false;
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.SetWindowSize(106, 30);
             Console.Title = "B e t t e r - T e a m s";
         }
-        //Wellcome Message
+
+        /// <summary>
+        /// Wellcome Message
+        /// </summary>
         public void Wellcome()
         {
             Console.WriteLine("                                   ===================================");
@@ -32,8 +35,10 @@ namespace ProjectBetterTeams
 
         }
 
-
-        //Main Menu UI
+        /// <summary>
+        /// Projects Main Menu
+        /// </summary>
+        /// <param name="User"></param>
         public void UIMainMenu(Users User)
         {
             User = userManager.FindUser(User.Username);
@@ -42,11 +47,15 @@ namespace ProjectBetterTeams
             Console.WriteLine("\n");
             Console.WriteLine($"Wellcome, {User.FirstName}!");
             Console.WriteLine("\n");
-            Console.WriteLine("1. Chat     2. Rooms     3. View Profile    4. Edit User    0. Log Out");
+            Console.WriteLine("1. Chat  |  2. Posts  |  3. View Profile  |  4. Edit  |  0. Log Out");
         }
 
+        /// <summary>
+        /// Redirects to Signup page
+        /// </summary>
         public void UIRedirectSignUp()
         {
+            Console.WriteLine("");
             Console.WriteLine("Invalid Username or Password");
             Console.WriteLine("1. Create Account  |  2. Try Again");
 
@@ -56,15 +65,95 @@ namespace ProjectBetterTeams
                 NewUser.SignUp();
         }
 
+        /// <summary>
+        /// Shows Users Profile
+        /// </summary>
+        /// <param name="Username"></param>
         public void ViewProfile(string Username)
         {
             Users user = userManager.FindUser(Username);
-            Console.WriteLine($"Username: {user.Username}\nFirst Name: {user.FirstName}\nLast Name: {user.LastName}\nDate Of Birth: {user.DateOFBirth}\nUser Type: {user.UserType}");
+            Console.WriteLine("");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("Here Is Your Profile!\nIf you want to Edit it go to Edit User Section!");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("");
+            Console.WriteLine($"Username: {user.Username}\nFirst Name: {user.FirstName}\nLast Name: {user.LastName}\nDate Of Birth: {user.DateOFBirth.Day}/{user.DateOFBirth.Month}/{user.DateOFBirth.Year}\nUser Type: {user.UserType}");
             Console.WriteLine("Press any key to go Back to Menu");
             Console.ReadKey();
             Console.Clear();
         }
 
+        /// <summary>
+        /// Shows Edit Menu
+        /// </summary>
+        /// <param name="user"></param>
+        public void UIEditMenu(Users user)
+        {
+            if (user.UserType == "SuperAdmin")
+            {
+                Console.WriteLine("");
+                Console.WriteLine(" ----------------------------------------------------------------");
+                Console.WriteLine(" | What do you want to edit?                                    |");
+                Console.WriteLine(" | 1. Users | 2. Messages | 3. Posts | 4. Delete Logs | 0. Back |");
+                Console.WriteLine(" ----------------------------------------------------------------");
+            }
+            else if (user.UserType == "Admin")
+            {
+                Console.WriteLine("");
+                Console.WriteLine(" -----------------------------------------------");
+                Console.WriteLine(" | What do you want to edit?                   |");
+                Console.WriteLine(" | 1. Users | 2. Messages | 3. Posts | 0. Back |");
+                Console.WriteLine(" -----------------------------------------------");
+            }
+            else if (user.UserType == "Teacher")
+            {
+                Console.WriteLine("");
+                Console.WriteLine(" ---------------------------------");
+                Console.WriteLine(" | What do you want to edit?     |");
+                Console.WriteLine(" | 1. Users | 2. Posts | 0. Back |");
+                Console.WriteLine(" ---------------------------------");
+            }
+            else
+            {
+                Console.WriteLine("");
+                Console.WriteLine(" ----------------------------");
+                Console.WriteLine(" | What do you want to edit?|");
+                Console.WriteLine(" |   1. Users  |   0. Back  |");
+                Console.WriteLine(" ----------------------------");
+            }
+        }
+
+        /// <summary>
+        /// Shows properties for edit
+        /// </summary>
+        /// <param name="user"></param>
+        public void UIShowAccess(Users user)
+        {
+
+                Console.WriteLine("------------------------------------");
+                Console.WriteLine($"Choose what do you want to edit:");
+                Console.WriteLine("------------------------------------");
+                Console.WriteLine($"1. Username: {user.Username}\n2. Password\n3. Firstname: {user.FirstName}\n4. Lastname: {user.LastName}\n5. DateOfBirth: {user.DateOFBirth.Day}/{user.DateOFBirth.Month}/{user.DateOFBirth.Year}\n6. UserType: {user.UserType}\n7. Delete User\n0. Exit");
+        }
+
+        /// <summary>
+        /// Shows properties of student for edit
+        /// </summary>
+        /// <param name="user"></param>
+        public void ShowProfile(Users user)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine($"User: {user.Username}");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine($"1. Username: {user.Username}\n2. Password\n3. Firstname: {user.FirstName}\n4. Lastname: {user.LastName}\n5. DateOfBirth: {user.DateOFBirth.Day}/{user.DateOFBirth.Month}/{user.DateOFBirth.Year}\n6. UserType: {user.UserType}\n0. Exit");
+        }
+
+        /// <summary>
+        /// Projects Usernames in Database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Return a string Username</returns>
         public string ShowUsernames(Users user)
         {
             foreach (string Username in userManager.GetUsernames(user.Username))

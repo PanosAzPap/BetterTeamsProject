@@ -107,7 +107,7 @@ namespace ProjectBetterTeams
 
             foreach (var mess in messages)
             {
-                Console.WriteLine($"--From: {mess.UsernameSender} To: {mess.Receiver}, {mess.DateTime}:\n>>> {mess.Message}");
+                Console.WriteLine($"--ID: {mess.MessageID} From: {mess.UsernameSender} To: {mess.Receiver}, {mess.DateTime}:\n>>> {mess.Message}");
                 Console.WriteLine("-----------------------------------------------------------------------------------");
             }
         }

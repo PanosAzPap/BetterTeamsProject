@@ -53,7 +53,7 @@ namespace ProjectBetterTeams
             GetPosts();
             do
             {
-                Console.Write("Select Post ID to delete: ");
+                Console.Write("Select Post ID to delete or '0' to exit: ");
                 Invalid = false;
                 try
                 {
@@ -65,6 +65,10 @@ namespace ProjectBetterTeams
                     Invalid = true;
                 }
             } while (Invalid);
+            if (ID == 0)
+            {
+                return;
+            }
             post = FindPost(ID);
             using (var db = new TeamsContext())
             {

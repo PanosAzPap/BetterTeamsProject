@@ -10,15 +10,28 @@ namespace ProjectBetterTeams
     {
         static void Main(string[] args)
         {
+
+            #region Console Configurations
             //Connection strings:
             //DESKTOP-VCB6LRK\SQLEXPRESS
             //PAPMAN-PC\SQLEXPRESS
 
+            //Console Configurations:
+            //Debuger: 
+            //         width :106
+            //         height:30
+            //         Font  :20 
+            //AppExe :
+            //         Left:320
+            //         Top :182
+            //         Font:20
+
             // TODO:
             // 2. Fix Admin Modification Access in MainProcedure
+            #endregion
 
-            //Initializers
-            #region
+
+            #region Inits
             MainProcedure procedure = new MainProcedure();
             UIProcedures UI = new UIProcedures();
             UserSignUp NewUser = new UserSignUp();

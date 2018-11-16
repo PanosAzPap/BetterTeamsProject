@@ -4,19 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Data.Entity;
 
 namespace ProjectBetterTeams
 {
     public class MainProcedure
     {
+
+        #region Inits
         UIProcedures UI = new UIProcedures();
         UserSignUp NewUser = new UserSignUp();
         UserManager userManager = new UserManager();
         PostManager postManager = new PostManager();
         MessageManager messageManager = new MessageManager();
         LogFileAccess Log = new LogFileAccess();
-
-        //Start Menu
+        #endregion
+        
+        
+        
         public ConsoleKeyInfo StartMenu()
         {
             do
@@ -94,7 +99,6 @@ namespace ProjectBetterTeams
         }
 
 
-
         public void MenuOptions(Users User, char Choice)
         {
             do
@@ -125,14 +129,17 @@ namespace ProjectBetterTeams
             } while (true);
         }
 
+
         public void EditMenu(Users User)
         {
+            
             do
             {
                 if (User.UserType == "SuperAdmin")
                 {
+                    Console.Clear();
                     char input;
-                    Console.WriteLine("What do you want to edit?\n1. Users | 2. Messages | 3. Posts | 0. Back");
+                    UI.UIEditMenu(User);
                     input = Console.ReadKey(true).KeyChar;
 
                     switch (input)
@@ -148,6 +155,12 @@ namespace ProjectBetterTeams
                             Console.WriteLine("Select Post to Delete:");
                             postManager.DeletePost();
                             break;
+                        case '4':
+                            Console.WriteLine("Are you sure (y/n)?");
+                            char IsSure = Console.ReadKey(true).KeyChar;
+                            if (IsSure == 'y')
+                                Log.DeleteLogs();
+                            break;
                         case '0':
                             return;                            
                         default:
@@ -157,7 +170,8 @@ namespace ProjectBetterTeams
                 }
                 else if (User.UserType == "Teacher")
                 {
-                    Console.WriteLine("Edit:\n1. Users\n2. Go back");
+                    Console.Clear();
+                    UI.UIEditMenu(User);
                     char input = Console.ReadKey(true).KeyChar;
 
                     switch (input)
@@ -166,6 +180,9 @@ namespace ProjectBetterTeams
                             userManager.TeacherModifyUser(User);
                             break;
                         case '2':
+                            postManager.DeletePost();
+                            break;
+                        case '0':
                             return;
                         default:
                             Console.WriteLine("Invalid Input!");
@@ -174,14 +191,52 @@ namespace ProjectBetterTeams
                 }
                 else if (User.UserType == "Admin")
                 {
-                    userManager.AdminModifyUser(User);
+                    Console.Clear();
+                    char input;
+                    UI.UIEditMenu(User);
+                    input = Console.ReadKey(true).KeyChar;
+
+                    switch (input)
+                    {
+                        case '1':
+                            userManager.AdminModifyUser(User);
+                            break;
+                        case '2':
+                            Console.WriteLine("Select Message to Delete");
+                            messageManager.DeleteMessage();
+                            break;
+                        case '3':
+                            Console.WriteLine("Select Post to Delete:");
+                            postManager.DeletePost();
+                            break;
+                        case '0':
+                            return;
+                        default:
+                            Console.WriteLine("Invalid Input!");
+                            break;
+                    }      
                 }
                 else
                 {
-                    userManager.StudentModifyUser(User);
+                    Console.Clear();
+                    UI.UIEditMenu(User);
+                    char input = Console.ReadKey(true).KeyChar;
+
+                    switch (input)
+                    {
+                        case '1':
+                            userManager.StudentModifyUser(User);
+                            break;
+                        case '2':
+                            return;
+                        default:
+                            Console.WriteLine("Invalid Input!");
+                            break;
+                    }
                 }
             } while (true);
         }
+
 
         public void ChatBox(Users user)
         {
@@ -217,6 +272,7 @@ namespace ProjectBetterTeams
             }
         }
 
+
         public void ChatMenu(Users User)
         {
             Console.WriteLine("1. Select User\n2. Delete Message\n3. Back");
@@ -235,6 +291,7 @@ namespace ProjectBetterTeams
                     break;
             }
         }
+
 
         public void PostMenu(Users user)
         {

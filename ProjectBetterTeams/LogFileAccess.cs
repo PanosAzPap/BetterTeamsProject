@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Threading;
 
 namespace ProjectBetterTeams
 {
@@ -26,11 +27,28 @@ namespace ProjectBetterTeams
                 }
                 catch (Exception)
                 {
+                    Console.WriteLine("Creating Log File...");
                     File.Create("Logs.txt");
                     AccessNotGranted = true;
+                    Thread.Sleep(2000);
+                    Console.Clear();
                 }
             } while (AccessNotGranted);
         }
 
+        public void DeleteLogs()
+        {
+            try
+            {
+                Console.WriteLine("Deleting Logs...");
+                System.IO.File.Delete("Logs.txt");
+                Thread.Sleep(2000);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            Console.WriteLine("Done!");
+        }
     }
 }
