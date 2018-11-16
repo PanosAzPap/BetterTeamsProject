@@ -10,12 +10,15 @@ namespace ProjectBetterTeams
     {
         static void Main(string[] args)
         {
+            //Connection strings:
+            //DESKTOP-VCB6LRK\SQLEXPRESS
+            //PAPMAN-PC\SQLEXPRESS
+
             // TODO:
             // 2. Fix Admin Modification Access in MainProcedure
 
-            //Usefull Classes
+            //Initializers
             #region
-            UserManager userManager = new UserManager();
             MainProcedure procedure = new MainProcedure();
             UIProcedures UI = new UIProcedures();
             UserSignUp NewUser = new UserSignUp();
@@ -39,7 +42,7 @@ namespace ProjectBetterTeams
                     Console.Write("Username: ");
                     string Username = Console.ReadLine();
                     Console.Write("Password: ");
-                    string Password = Console.ReadLine();
+                    string Password = procedure.HidePassword();
                     Users User;
                     char Choice;
 
