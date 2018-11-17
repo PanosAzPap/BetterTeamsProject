@@ -102,14 +102,14 @@ namespace ProjectBetterTeams
 
                 if (Username == "exit")
                     return;
-                
+
                 //Check If User Exists
                 if (FindUser(Username) == null)
                 {
                     Console.WriteLine("Username Not Found!");
                     Invalid = true;
                 }
-                else 
+                else
                 {
                     UIProcedures UI = new UIProcedures();
                     Users user = FindUser(Username);
@@ -118,35 +118,8 @@ namespace ProjectBetterTeams
                     switch (Choice)
                     {
                         case '1':
-                            string NewUsername;
-                            if (user.Username != CurrentUser.Username)
-                            {
-                                Console.WriteLine("You cant change Username of other users!!");
-                                Thread.Sleep(1500);
-                                break;
-                            }
-                            do
-                            {
-                                Console.WriteLine("***NOTE***\nApplication will Restart after changes!!!");
-                                Invalid = false;
-                                Console.Write("New Username: ");
-                                NewUsername = Console.ReadLine();
-                                if (FindUser(NewUsername) != null)
-                                    Invalid = true;
-                            } while (Invalid);
-
-                            using (var db = new TeamsContext())
-                            {
-                                user.Username = NewUsername;
-                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
-                                Console.WriteLine("Saving, please wait...");
-                                db.SaveChanges();                                
-                            }
-                            Console.WriteLine("Complete!\nLoging Out...");
-                            Thread.Sleep(3000);
-                            string fileName = Assembly.GetExecutingAssembly().Location;
-                            System.Diagnostics.Process.Start(fileName);
-                            Environment.Exit(0);
+                            Console.WriteLine("You cant change Username!");
+                            Thread.Sleep(1500);
                             break;
                         case '2':
                             UserSignUp PassEncrypt = new UserSignUp();
@@ -187,7 +160,7 @@ namespace ProjectBetterTeams
                             }
                             Console.WriteLine("Complete!\nLoging Out...");
                             Thread.Sleep(3000);
-                            fileName = Assembly.GetExecutingAssembly().Location;
+                            string fileName = Assembly.GetExecutingAssembly().Location;
                             System.Diagnostics.Process.Start(fileName);
                             Environment.Exit(0);
                             break;
@@ -348,35 +321,8 @@ namespace ProjectBetterTeams
                     switch (Choice)
                     {
                         case '1':
-                            string NewUsername;
-                            if (user.Username != CurrentUser.Username)
-                            {
-                                Console.WriteLine("You cant change Username of other users!!");
-                                Thread.Sleep(1500);
-                                break;
-                            }
-                            do
-                            {
-                                Console.WriteLine("***NOTE***\nApplication will Restart after changes!!!");
-                                Invalid = false;
-                                Console.Write("New Username: ");
-                                NewUsername = Console.ReadLine();
-                                if (FindUser(NewUsername) != null)
-                                    Invalid = true;
-                            } while (Invalid);
-
-                            using (var db = new TeamsContext())
-                            {
-                                user.Username = NewUsername;
-                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
-                                Console.WriteLine("Saving, please wait...");
-                                db.SaveChanges();
-                            }
-                            Console.WriteLine("Complete!\nLoging Out...");
-                            Thread.Sleep(3000);
-                            string fileName = Assembly.GetExecutingAssembly().Location;
-                            System.Diagnostics.Process.Start(fileName);
-                            Environment.Exit(0);
+                            Console.WriteLine("You cant change Username!");
+                            Thread.Sleep(1500);
                             break;
                         case '2':
                             UserSignUp PassEncrypt = new UserSignUp();
@@ -417,7 +363,7 @@ namespace ProjectBetterTeams
                             }
                             Console.WriteLine("Complete!\nLoging Out...");
                             Thread.Sleep(3000);
-                            fileName = Assembly.GetExecutingAssembly().Location;
+                            string fileName = Assembly.GetExecutingAssembly().Location;
                             System.Diagnostics.Process.Start(fileName);
                             Environment.Exit(0);
                             break;
@@ -500,24 +446,8 @@ namespace ProjectBetterTeams
             switch (editChoice.KeyChar)
             {
                 case '1':
-                    Console.WriteLine("***NOTE***\nApplication will Restart after changes!!!");
-                    Console.Write("New Username: ");
-                    string NewUserName = Console.ReadLine();
-                    if (FindUser(NewUserName) == null)
-                    {
-                        using (var db = new TeamsContext())
-                        {
-                            User.Username = Console.ReadLine();
-                            db.Entry(User).State = System.Data.Entity.EntityState.Modified;
-                            Console.WriteLine("Saving, please wait...");
-                            db.SaveChanges();
-                        }
-                        Console.WriteLine("Complete!\nLoging Out...");
-                        Thread.Sleep(3000);
-                        string fileName = Assembly.GetExecutingAssembly().Location;
-                        System.Diagnostics.Process.Start(fileName);
-                        Environment.Exit(0);
-                    }
+                    Console.WriteLine("You cant change Username!");
+                    Thread.Sleep(1500);
                     break;
                 case '2':
                     Console.WriteLine("***NOTE***\nApplication will Restart after changes!!!");
@@ -641,36 +571,8 @@ namespace ProjectBetterTeams
                     switch (Choice)
                     {
                         case '1':
-                            string NewUsername;
-                            if (user.Username != CurrentUser.Username)
-                            {
-                                Console.WriteLine("You cant change Username of other users!!");
-                                Thread.Sleep(1500);
-                                break;
-                            }
-                            do
-                            {
-                                Console.WriteLine("***NOTE***\nApplication will Restart after changes!!!");
-                                Invalid = false;
-                                Console.Write("New Username: ");
-                                NewUsername = Console.ReadLine();
-                                if (FindUser(NewUsername) != null)
-                                    Invalid = true;
-                            } while (Invalid);
-
-                            using (var db = new TeamsContext())
-                            {
-                                user.Username = NewUsername;
-                                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
-                                Console.WriteLine("Saving, please wait...");
-                                db.SaveChanges();
-                            }
-
-                            Console.WriteLine("Complete!\nLoging Out...");
-                            Thread.Sleep(3000);
-                            string fileName = Assembly.GetExecutingAssembly().Location;
-                            System.Diagnostics.Process.Start(fileName);
-                            Environment.Exit(0);
+                            Console.WriteLine("You cant change Username!");
+                            Thread.Sleep(1500);
                             break;
                         case '2':
                             UserSignUp PassEncrypt = new UserSignUp();
@@ -712,7 +614,7 @@ namespace ProjectBetterTeams
 
                             Console.WriteLine("Complete!\nLoging Out...");
                             Thread.Sleep(3000);
-                            fileName = Assembly.GetExecutingAssembly().Location;
+                            string fileName = Assembly.GetExecutingAssembly().Location;
                             System.Diagnostics.Process.Start(fileName);
                             Environment.Exit(0);
                             break;
@@ -798,7 +700,7 @@ namespace ProjectBetterTeams
             using (var db = new TeamsContext())
             {
                 Console.WriteLine("Finishing...");
-                db.Entry(user).State = System.Data.Entity.EntityState.Deleted;              
+                db.Entry(user).State = System.Data.Entity.EntityState.Deleted;
                 db.SaveChanges();
             }
             Console.WriteLine("Remove Complete!");
