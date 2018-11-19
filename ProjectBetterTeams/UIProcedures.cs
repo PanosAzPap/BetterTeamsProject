@@ -74,7 +74,7 @@ namespace ProjectBetterTeams
             Users user = userManager.FindUser(Username);
             Console.WriteLine("");
             Console.WriteLine("-------------------------------------------------");
-            Console.WriteLine("Here Is Your Profile!\nIf you want to Edit it go to Edit User Section!");
+            Console.WriteLine("Here Is Your Profile!\nIf you want to Edit it go to 'Edit' --> 'User'!");
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine("");
             Console.WriteLine($"Username: {user.Username}\nFirst Name: {user.FirstName}\nLast Name: {user.LastName}\nDate Of Birth: {user.DateOFBirth.Day}/{user.DateOFBirth.Month}/{user.DateOFBirth.Year}\nUser Type: {user.UserType}");

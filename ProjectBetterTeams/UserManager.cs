@@ -451,7 +451,6 @@ namespace ProjectBetterTeams
                     break;
                 case '2':
                     Console.WriteLine("***NOTE***\nApplication will Restart after changes!!!");
-                    Console.Write("New Username: ");
                     UserSignUp EncryptPass = new UserSignUp();
                     do
                     {

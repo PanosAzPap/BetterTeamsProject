@@ -18,7 +18,7 @@ namespace ProjectBetterTeams
             }
             foreach (Posts post in Posts)
             {
-                Console.WriteLine($">>>{post.PostID}, {post.UsernameSender} at {post.DateTime}:\n {post.Post}");
+                Console.WriteLine($">>> Post ID: {post.PostID}, {post.UsernameSender} at {post.DateTime}:\n {post.Post}");
             }
         }
 
